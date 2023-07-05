@@ -1,0 +1,8 @@
+[server]
+udp = true
+udp_bind = "0.0.0.0:5014"
+tcp = true
+tcp_bind = "0.0.0.0:5014"
+
+[loki]
+url = "http://<loki_ip>/loki/api/v1/push"

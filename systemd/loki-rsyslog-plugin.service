@@ -1,0 +1,14 @@
+[Unit]
+Description="Loki Rsyslog Plugin"
+Documentation="https://github.com/JialeHao/loki-rsyslog-plugin"
+After=network.target loki.service
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/local/loki-rsyslog-plugin
+ExecStart=/usr/local/loki-rsyslog-plugin/loki-rsyslog-plugin -f config.toml
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
