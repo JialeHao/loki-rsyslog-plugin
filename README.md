@@ -42,7 +42,7 @@ Dockerfile base image可根据实际情况进行修改
 mkdir /usr/local/loki-rsyslog-plugin
 
 # （2）Github Release下载打包文件
-wget https://github.com/JialeHao/loki-rsyslog-plugin/releases/download/v1.0.1/loki-rsyslog-plugin-1.0.0-linux.amd64.tar.gz
+wget https://github.com/JialeHao/loki-rsyslog-plugin/releases/download/v1.0.1/loki-rsyslog-plugin-1.0.1-linux.amd64.tar.gz
 
 # （3）解压至运行目录
 tar zxvf loki-rsyslog-plugin-1.0.1-linux.amd64.tar.gz -C /usr/local/loki-rsyslog-plugin/
