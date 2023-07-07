@@ -33,13 +33,17 @@ func udpserver(address string) {
 }
 
 func udprecv(c *net.UDPConn) {
-    data := make([]byte, logDataSize)
-    n, udpAddr, err := c.ReadFromUDP(data)
-    ts := time.Now().Local()
+    var n int
+    var err error
+    var udpAddr *net.UDPAddr
 
-    if err != nil {
+    data := make([]byte, syslogLength)
+
+    if n, udpAddr, err = c.ReadFromUDP(data); err != nil {
         logger.Error(err)
     }
+
+    ts := time.Now().Local()
 
     lm := &logMsg{
         ts:    ts,
@@ -48,7 +52,7 @@ func udprecv(c *net.UDPConn) {
         msg:   data[:n],
     }
 
-    logger.Infof("log receive success from %v, proto=udp, recv_ts: %v msg: %v", lm.ip, lm.ts, string(lm.msg))
+    logger.Infof("recv success from %v, proto=udp, recv_ts: %v msg: %v", lm.ip, lm.ts, string(lm.msg))
 
     logMsgPool <- lm
 

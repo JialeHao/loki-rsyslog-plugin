@@ -34,7 +34,7 @@ func tcprecv(conn net.Conn) {
     var n int
     var err error
 
-    buf := make([]byte, logDataSize)
+    buf := make([]byte, syslogLength)
 
     if n, err = conn.Read(buf); err != nil {
         logger.Error(err)
@@ -54,5 +54,5 @@ func tcprecv(conn net.Conn) {
 
     logMsgPool <- lm
 
-    logger.Infof("log receive success from %v, proto=tcp, recv_ts: %v msg: %v", lm.ip, lm.ts, string(lm.msg))
+    logger.Infof("recv success from %v, proto=tcp, recv_ts: %v msg: %v", lm.ip, lm.ts, string(lm.msg))
 }

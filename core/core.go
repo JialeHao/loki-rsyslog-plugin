@@ -1,7 +1,6 @@
 package core
 
 func Run(configfile string) {
-
     cfg := loadcfg(configfile)
 
     if cfg.Server.Udp {

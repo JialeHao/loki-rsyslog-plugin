@@ -11,7 +11,22 @@ var logMsgPool = make(chan *logMsg, 10240)
 
 var coreWaitGroup sync.WaitGroup
 
-var logDataSize int = 1024
+
+// RFC3164规定syslog长度不超过1024 bytes
+// RFC5424规定syslog长度不超过2048 octets
+// 为了兼容RFC3164和RFC5424设置syslogLength为2048
+const syslogLength int = 2048
+
+var severity = [8]string{
+    "Emergency",
+    "Alert",
+    "Critical",
+    "Error",
+    "Warning",
+    "Notice",
+    "Informational",
+    "Debug",
+}
 
 type logMsg struct {
     ts    time.Time
