@@ -74,7 +74,7 @@ systemctl enable loki-rsyslog-plugin.service --now
 ## 新增标签
 暂不支持简单的方式，需修改代码并重新编译（后续重点改善）。
 
-需要修改core/push.go，在packline函数中新增自定义逻辑，根据实际情况新增自定义标签。
+需要修改core/packline.go，在packline函数中新增自定义逻辑，根据实际情况新增自定义标签。
 
 ## 设计理念
 做好中间人角色，不过分臃肿，以ip标签为根据，联动企业内部其它系统的开放能力，查询标签并添加，超时或返回错误则不添加此标签，或者结合loki对外提供查询能力。
