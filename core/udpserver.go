@@ -40,7 +40,7 @@ func udprecv(c *net.UDPConn) {
     data := make([]byte, syslogLength)
 
     if n, udpAddr, err = c.ReadFromUDP(data); err != nil {
-        logger.Error(err)
+        logger.Fatal(err)
     }
 
     ts := time.Now().Local()

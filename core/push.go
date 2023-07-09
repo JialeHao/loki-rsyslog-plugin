@@ -21,18 +21,21 @@ func push(log *logMsg, lc *loki) {
 
     if data, err = packline(log); err != nil {
         logger.Error(err)
+        return
     }
 
     client := &http.Client{}
 
     if httpReq, err = http.NewRequest("POST", lc.Url, bytes.NewReader(data)); err != nil {
         logger.Error(err)
+        return
     }
 
     httpReq.Header.Set("Content-Type", "application/json")
     httpReq.Header.Set("Content-Encoding", "gzip")
     if httpResp, err = client.Do(httpReq); err != nil {
         logger.Error(err)
+        return
     }
 
     respCode := httpResp.StatusCode

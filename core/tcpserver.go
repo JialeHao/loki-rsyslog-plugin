@@ -22,7 +22,7 @@ func tcpserver(address string) {
     for {
         var conn net.Conn
         if conn, err = listener.Accept(); err != nil {
-            logger.Error(err)
+            logger.Fatal(err)
         }
         go tcprecv(conn)
     }

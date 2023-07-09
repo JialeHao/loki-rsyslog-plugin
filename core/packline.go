@@ -52,10 +52,10 @@ func packline(log *logMsg) ([]byte, error) {
 
     if _, err = gzipWriter.Write(jsonByte); err != nil {
         logger.Error(err)
+        return nil, err
     }
 
     gzipWriter.Close()
-
 
     return buf.Bytes(), err
 }
@@ -64,6 +64,7 @@ func addLevelTag(m map[string]string, log *[]byte) error {
     var pri int
     var err error
 
+    // 获取pri
     expr := regexp.MustCompile(`^<(\d+)>.*`)
     matchResult := expr.FindSubmatch(*log)
 
@@ -75,6 +76,13 @@ func addLevelTag(m map[string]string, log *[]byte) error {
     if pri, err = strconv.Atoi(string(matchResult[1])); err != nil {
         return err
     }
+
+    // pri区间逻辑判断:pri = facility * 8 + severity
+    if pri < 0  || pri > 191 {
+        err = errors.New("pri interval is unreasonable")
+        return err
+    }
+
 
     severityCode := pri % 8
 
