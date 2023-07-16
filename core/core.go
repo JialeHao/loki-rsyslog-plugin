@@ -1,5 +1,9 @@
 package core
 
+import "github.com/JialeHao/loki-rsyslog-plugin/utils"
+
+var logger = utils.InitLogger()
+
 func Run(configfile string) {
     cfg := loadcfg(configfile)
 

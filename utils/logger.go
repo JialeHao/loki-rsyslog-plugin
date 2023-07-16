@@ -1,4 +1,4 @@
-package core
+package utils
 
 import (
     "fmt"
@@ -7,9 +7,7 @@ import (
     "go.uber.org/zap/zapcore"
 )
 
-var logger = newLogger()
-
-func newLogger() *zap.SugaredLogger {
+func InitLogger() *zap.SugaredLogger {
     var logger *zap.Logger
     var err error
 
