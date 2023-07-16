@@ -1,58 +1,58 @@
 package core
 
 import (
-    "net"
-    "time"
+	"net"
+	"time"
 )
 
 func tcpserver(address string) {
-    defer coreWaitGroup.Done()
+	defer coreWaitGroup.Done()
 
-    var listener net.Listener
-    var err error
+	var listener net.Listener
+	var err error
 
-    if listener, err = net.Listen("tcp", address); err != nil {
-        logger.Fatal(err)
-    }
+	if listener, err = net.Listen("tcp", address); err != nil {
+		logger.Fatal(err)
+	}
 
-    defer listener.Close()
+	defer listener.Close()
 
-    logger.Infof("tcp server started, listen %v", address)
+	logger.Infof("tcp server started, listen %v", address)
 
-    for {
-        var conn net.Conn
-        if conn, err = listener.Accept(); err != nil {
-            logger.Fatal(err)
-        }
-        go tcprecv(conn)
-    }
+	for {
+		var conn net.Conn
+		if conn, err = listener.Accept(); err != nil {
+			logger.Fatal(err)
+		}
+		go tcprecv(conn)
+	}
 }
 
 func tcprecv(conn net.Conn) {
-    defer conn.Close()
+	defer conn.Close()
 
-    var n int
-    var err error
+	var n int
+	var err error
 
-    buf := make([]byte, syslogLength)
+	buf := make([]byte, syslogLength)
 
-    if n, err = conn.Read(buf); err != nil {
-        logger.Error(err)
-        return
-    }
+	if n, err = conn.Read(buf); err != nil {
+		logger.Error(err)
+		return
+	}
 
-    ts := time.Now().Local()
+	ts := time.Now().Local()
 
-    remoteIp, _ := net.ResolveTCPAddr("tcp", conn.RemoteAddr().String())
+	remoteIp, _ := net.ResolveTCPAddr("tcp", conn.RemoteAddr().String())
 
-    lm := &logMsg{
-        ts:    ts,
-        proto: "tcp",
-        ip:    string(remoteIp.IP),
-        msg:   buf[:n],
-    }
+	lm := &LogMsg{
+		ts:    ts,
+		proto: "tcp",
+		ip:    string(remoteIp.IP),
+		msg:   buf[:n],
+	}
 
-    logMsgPool <- lm
+	logMsgPool <- lm
 
-    logger.Infof("recv success from %v, proto=tcp, recv_ts: %v msg: %v", lm.ip, lm.ts, string(lm.msg))
+	logger.Infof("recv success from %v, proto=tcp, recv_ts: %v msg: %v", lm.ip, lm.ts, string(lm.msg))
 }

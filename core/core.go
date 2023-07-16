@@ -5,7 +5,7 @@ import "github.com/JialeHao/loki-rsyslog-plugin/utils"
 var logger = utils.InitLogger()
 
 func Run(configfile string) {
-    cfg := loadcfg(configfile)
+    cfg := utils.InitConfig(configfile)
 
     if cfg.Server.Udp {
         coreWaitGroup.Add(1)
