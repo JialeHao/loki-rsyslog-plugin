@@ -1,8 +1,12 @@
 [server]
 udp = true
-udp_bind = "0.0.0.0:5014"
+udp_bind = "0.0.0.0:514"
 tcp = true
-tcp_bind = "0.0.0.0:5014"
+tcp_bind = "0.0.0.0:514"
 
 [loki]
 url = "http://<loki_ip>/loki/api/v1/push"
+
+[dingtalk]
+token = "<your_accress_token>"
+secret = "<your_secret_code>"

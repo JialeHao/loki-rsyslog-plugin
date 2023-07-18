@@ -1,60 +1,60 @@
 package core
 
 import (
-	"net"
-	"time"
+    "net"
+    "time"
 )
 
 var udpPool = make(chan bool, 2048)
 
 func udpserver(address string) {
-	defer coreWaitGroup.Done()
+    defer coreWaitGroup.Done()
 
-	var addr *net.UDPAddr
-	var conn *net.UDPConn
-	var err error
+    var addr *net.UDPAddr
+    var conn *net.UDPConn
+    var err error
 
-	if addr, err = net.ResolveUDPAddr("udp", address); err != nil {
-		logger.Fatal(err)
-	}
+    if addr, err = net.ResolveUDPAddr("udp", address); err != nil {
+        logger.Fatal(err)
+    }
 
-	if conn, err = net.ListenUDP("udp", addr); err != nil {
-		logger.Fatal(err)
-	}
+    if conn, err = net.ListenUDP("udp", addr); err != nil {
+        logger.Fatal(err)
+    }
 
-	defer conn.Close()
+    defer conn.Close()
 
-	logger.Infof("udp server started, listen %v", addr.String())
+    logger.Infof("udp server started, listen %v", addr.String())
 
-	for {
-		udpPool <- true
-		go udprecv(conn)
-	}
+    for {
+        udpPool <- true
+        go udprecv(conn)
+    }
 }
 
 func udprecv(c *net.UDPConn) {
-	var n int
-	var err error
-	var udpAddr *net.UDPAddr
+    var n int
+    var err error
+    var udpAddr *net.UDPAddr
 
-	data := make([]byte, syslogLength)
+    data := make([]byte, syslogLength)
 
-	if n, udpAddr, err = c.ReadFromUDP(data); err != nil {
-		logger.Fatal(err)
-	}
+    if n, udpAddr, err = c.ReadFromUDP(data); err != nil {
+        logger.Fatal(err)
+    }
 
-	ts := time.Now().Local()
+    ts := time.Now().Local()
 
-	lm := &LogMsg{
-		ts:    ts,
-		proto: "udp",
-		ip:    udpAddr.IP.String(),
-		msg:   data[:n],
-	}
+    lm := &LogMsg{
+        ts:    ts,
+        proto: "udp",
+        ip:    udpAddr.IP.String(),
+        msg:   data[:n],
+    }
 
-	logger.Infof("recv success from %v, proto=udp, recv_ts: %v msg: %v", lm.ip, lm.ts, string(lm.msg))
+    logger.Infof("recv success from %v, proto=udp, recv_ts: %v msg: %v", lm.ip, lm.ts, string(lm.msg))
 
-	logMsgPool <- lm
+    logMsgPool <- lm
 
-	<-udpPool
+    <-udpPool
 }

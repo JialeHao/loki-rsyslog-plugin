@@ -1,10 +1,10 @@
 package core
 
 import (
-	"sync"
-	"time"
+    "sync"
+    "time"
 
-	// "github.com/BurntSushi/toml"
+    // "github.com/BurntSushi/toml"
 )
 
 var logMsgPool = make(chan *LogMsg, 10240)
@@ -17,28 +17,28 @@ var coreWaitGroup sync.WaitGroup
 const syslogLength int = 2048
 
 var severity = [8]string{
-	"Emergency",
-	"Alert",
-	"Critical",
-	"Error",
-	"Warning",
-	"Notice",
-	"Informational",
-	"Debug",
+    "Emergency",
+    "Alert",
+    "Critical",
+    "Error",
+    "Warning",
+    "Notice",
+    "Informational",
+    "Debug",
 }
 
 type LogMsg struct {
-	ts    time.Time
-	proto string
-	ip    string
-	msg   []byte
+    ts    time.Time
+    proto string
+    ip    string
+    msg   []byte
 }
 
 type lokiMsg struct {
-	Streams []lokiStreams `json:"streams"`
+    Streams []lokiStreams `json:"streams"`
 }
 
 type lokiStreams struct {
-	Stream map[string]string `json:"stream"`
-	Values [][2]string       `json:"values"`
+    Stream map[string]string `json:"stream"`
+    Values [][2]string       `json:"values"`
 }

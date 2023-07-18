@@ -8,6 +8,8 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+
+	"github.com/JialeHao/loki-rsyslog-plugin/alarm"
 )
 
 func packline(log *LogMsg) ([]byte, error) {
@@ -19,7 +21,7 @@ func packline(log *LogMsg) ([]byte, error) {
 	labels["proto"] = log.proto
 	labels["ts"] = log.ts.Format(time.RFC3339)
 
-	if err = addLevelTag(labels, &log.msg); err != nil {
+	if err = severityTag(labels, &log.msg); err != nil {
 		labels["level"] = "unset"
 		logger.Warn(err)
 	}
@@ -60,7 +62,7 @@ func packline(log *LogMsg) ([]byte, error) {
 	return buf.Bytes(), err
 }
 
-func addLevelTag(m map[string]string, log *[]byte) error {
+func severityTag(m map[string]string, log *[]byte) error {
 	var pri int
 	var err error
 
@@ -86,6 +88,9 @@ func addLevelTag(m map[string]string, log *[]byte) error {
 	severityCode := pri % 8
 
 	m["level"] = severity[severityCode]
+
+	am := alarm.InitAlarmChannel()
+	am.Push(log)
 
 	return nil
 }
