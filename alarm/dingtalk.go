@@ -6,7 +6,6 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -70,8 +69,6 @@ func (dingtalk *dingtalk) Push(log *[]byte) {
 		logger.Error(err)
 		return
 	}
-
-	fmt.Println(string(msgjson))
 
 	if httpReq, err = http.NewRequest("POST", url, bytes.NewReader(msgjson)); err != nil {
 		logger.Error(err)
