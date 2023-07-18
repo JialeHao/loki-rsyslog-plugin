@@ -89,8 +89,11 @@ func severityTag(m map[string]string, log *[]byte) error {
 
 	m["level"] = severity[severityCode]
 
-	am := alarm.InitAlarmChannel()
-	am.Push(log)
+	// 告警等级高于Error进行告警
+	if severityCode <= 3 {
+		am := alarm.InitAlarmChannel()
+		am.Push(log)
+	}
 
 	return nil
 }

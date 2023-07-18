@@ -2,7 +2,7 @@
 loki-rsyslog-plugin是连接Grafana Loki与Remote syslog的中间插件
 
 ## 工作原理
-loki-rsyslog-plugin默认监听系统端口`5014/tcp` `5014/udp`接收远程系统日志，日志接收后，对日志进行打标签，然后推送至Loki日志服务器，用于实现系统/设备远程日志集中管理，统一查询。
+loki-rsyslog-plugin默认监听系统端口`514/tcp` `514/udp`接收远程系统日志，日志接收后，对日志进行打标签，然后推送至Loki日志服务器，用于实现系统/设备远程日志集中管理，统一查询。
 
 ## 优点
 - 使用Golang开发，构建部署简单，具有高并发优点；
@@ -10,7 +10,7 @@ loki-rsyslog-plugin默认监听系统端口`5014/tcp` `5014/udp`接收远程系�
 
 ## 应用场景
 ### 场景1：硬件日志集中管理
-数据中心机房服务器BMC、交换机、存储阵列等设备开启远程系统日志功能，由`loki-rsyslog-plugin`接收日志消息并处理，统一推送至Grafana Loki,实现日志集中管理，统一查询，并通过alertmanager进行告警。
+数据中心机房服务器BMC、交换机、存储阵列等设备开启远程系统日志功能，由`loki-rsyslog-plugin`接收日志消息并处理，统一推送至Grafana Loki,实现日志集中管理，统一查询，并推送钉钉告警。
 
 # 开始运行
 ## 开始前配置
@@ -20,12 +20,16 @@ loki-rsyslog-plugin默认监听系统端口`5014/tcp` `5014/udp`接收远程系�
 ```toml
 [server]
 udp = true  # 是否开启udp监听
-udp_bind = "0.0.0.0:5014"  # udp监听地址
+udp_bind = "0.0.0.0:514"  # udp监听地址
 tcp = true  # 是否开启tcp监听
-tcp_bind = "0.0.0.0:5014"  # tcp监听地址
+tcp_bind = "0.0.0.0:514"  # tcp监听地址
 
 [loki]
 url = "http://<loki_ip>:3100/loki/api/v1/push" # loki推送接口
+
+[dingtalk]
+token = "<your_accress_token>"  # 钉钉群自定义webhook机器人access_token
+secret = "<your_secret_code>"  # 钉钉群自定义webhook机器人secret,一般是SEC开头
 ```
 
 ## 方式1：快速开始（Docker）
